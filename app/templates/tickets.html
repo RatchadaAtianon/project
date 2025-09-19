@@ -113,13 +113,13 @@
                     <!-- 🔎 New: Search by Apprentice Name -->
                     {% if 'username' in session and session['role'] == 'admin' %}
                     <div class="form-group col-12 col-md-3">
-                        <label for="apprentice_name">Apprentice Name:</label>
+                        <label for="apprentice_name">Apprentice Username:</label>
                         <input
                                 type="text"
                                 id="apprentice_name"
                                 name="apprentice_name"
                                 class="form-control"
-                                placeholder="e.g., Alex Smith"
+                                placeholder="e.g., Apprentice1"
                                 value="{{ request.args.get('apprentice_name','') }}">
                     </div>
                     {% endif %}
