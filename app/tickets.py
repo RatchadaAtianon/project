@@ -7,7 +7,7 @@ from functools import wraps
 def apprentice_required(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
-        # allow only explicit 'apprentice' role
+
         if session.get('role') != 'apprentice':
             flash('Admins cannot submit tickets.', 'error')
             return redirect(url_for('tickets'))
@@ -48,7 +48,7 @@ def admin_required(f):
 def tickets():
     conn = get_db_connection()
 
-    # Base query + join so we can filter by username and show it in the template
+
     query = '''
         SELECT
             tickets.*,
@@ -93,9 +93,9 @@ def tickets():
                 params.append(int(apprentice_id))
             else:
                 flash('Apprentice ID must be numeric.', 'warning')
-                # (No ID filter applied)
 
-    # Order newest first (use created_at if available)
+
+
     query += ' ORDER BY tickets.id DESC'
 
     tickets = conn.execute(query, params).fetchall()

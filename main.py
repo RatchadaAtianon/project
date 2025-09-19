@@ -6,17 +6,17 @@ from app import app
 
 @app.route('/')
 def home():
-    # Not logged in? go to login
+
     if 'username' not in session:
         return redirect(url_for('login'))
 
     role = session.get('role')
 
-    # Any data you normally pass to the home page
-    announcements = []  # replace with get_announcements() if you have it
+
+    announcements = []
     current_year = datetime.now().year
 
-    # Pick the right template per role
+
     template = 'admin_home.html' if role == 'admin' else 'index.html'
     return render_template(template, announcements=announcements, current_year=current_year)
 

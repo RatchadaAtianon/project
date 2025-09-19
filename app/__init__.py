@@ -1,4 +1,3 @@
-
 import os
 from flask import Flask
 from flask_bcrypt import Bcrypt
@@ -12,14 +11,11 @@ def env_bool(name: str, default: str = "false") -> bool:
 
 app = Flask(__name__)
 
-
-
 use_ssl = env_bool("MAIL_USE_SSL", "false")
 use_tls = env_bool("MAIL_USE_TLS", "true")
 
 if use_ssl:
     use_tls = False
-
 
 sender_email = os.getenv("MAIL_DEFAULT_EMAIL") or os.getenv("MAIL_USERNAME") or "no-reply@example.com"
 sender_name = os.getenv("MAIL_DEFAULT_NAME", "Apprentice Helpdesk")
@@ -40,17 +36,13 @@ app.config.update(
     MAIL_SUPPRESS_SEND=env_bool("MAIL_SUPPRESS_SEND", "false"),
 )
 
-
 if app.config["TESTING"]:
     app.config["MAIL_SUPPRESS_SEND"] = True
 
-
 app.secret_key = app.config["SECRET_KEY"]
-
 
 bcrypt = Bcrypt(app)
 mail = Mail(app)
 ts = URLSafeTimedSerializer(app.config["SECRET_KEY"])
-
 
 from app import auth, users, tickets, api

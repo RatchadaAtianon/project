@@ -1,15 +1,15 @@
 import sqlite3
 from flask_bcrypt import Bcrypt
 
-# Initialize Bcrypt (make sure your Flask app is available)
-bcrypt = Bcrypt()  # This assumes you have your Flask app context available
+
+bcrypt = Bcrypt()
 
 
 def insert_users():
     conn = sqlite3.connect('helpdesk.db')
     cursor = conn.cursor()
 
-    # Sample users
+
     users = [
         ('apprentice1', 'password123', 'apprentice1@example.com', 'apprentice'),
         ('apprentice2', 'password123', 'apprentice2@example.com', 'apprentice'),
@@ -24,7 +24,7 @@ def insert_users():
     ]
 
     for username, password, email, role in users:
-        # Hash the password using Flask-Bcrypt
+
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')  # Hash the password
 
         try:
@@ -43,7 +43,7 @@ def insert_tickets():
     conn = sqlite3.connect('helpdesk.db')
     cursor = conn.cursor()
 
-    # Sample tickets
+
     tickets = [
         (1, 'Issue with laptop', 'My laptop won\'t turn on.', 'High', 'open'),
         (2, 'Software installation', 'Need help installing software.', 'High', 'open'),

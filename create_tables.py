@@ -5,11 +5,11 @@ def init_db():
     conn = sqlite3.connect('helpdesk.db')
     cursor = conn.cursor()
 
-    # Drop tables if they exist
+
     cursor.execute('DROP TABLE IF EXISTS tickets')
     cursor.execute('DROP TABLE IF EXISTS users')
 
-    # Create users table
+
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -20,7 +20,7 @@ def init_db():
         )
     ''')
 
-    # Create tickets table
+
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS tickets (
             id INTEGER PRIMARY KEY AUTOINCREMENT,

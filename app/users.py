@@ -1,5 +1,3 @@
-# app/users.py (or wherever this module lives)
-
 from functools import wraps
 
 from flask import (
@@ -13,7 +11,6 @@ from app.db import get_db_connection
 from itsdangerous import BadSignature, SignatureExpired
 
 
-# ------------------ Auth/Role Decorator ------------------
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -33,7 +30,6 @@ def admin_required(f):
     return decorated_function
 
 
-# ------------------ Forgot / Reset Password ------------------
 @app.route("/forgot-password", methods=["GET", "POST"])
 def forgot_password():
     if request.method == "POST":
@@ -42,7 +38,6 @@ def forgot_password():
             flash("Please enter your email address.", "error")
             return redirect(url_for("forgot_password"))
 
-        # Look up the user by email
         conn = get_db_connection()
         user = conn.execute(
             "SELECT id, username, email FROM users WHERE LOWER(email) = ?",
@@ -50,7 +45,6 @@ def forgot_password():
         ).fetchone()
         conn.close()
 
-        # Always behave the same (avoid account enumeration)
         if user:
             token = ts.dumps(email, salt="pwd-reset")
             reset_url = url_for("reset_password", token=token, _external=True)
@@ -69,7 +63,7 @@ def forgot_password():
                 )
                 mail.send(msg)
             except Exception as e:
-                # Dev fallback: log the link so you can test without SMTP working
+
                 app.logger.warning("Reset email failed to send: %s", e)
                 app.logger.info("Password reset link (dev): %s", reset_url)
 
@@ -81,7 +75,6 @@ def forgot_password():
 
 @app.route("/reset-password/<token>", methods=["GET", "POST"])
 def reset_password(token):
-    # Verify token (1 hour expiry)
     try:
         email = ts.loads(token, salt="pwd-reset", max_age=3600)
     except SignatureExpired:
@@ -94,13 +87,12 @@ def reset_password(token):
     if request.method == "POST":
         pwd = (request.form.get("password") or "").strip()
         confirm = (
-            request.form.get("confirm_password")
-            or request.form.get("confirmPassword")  # tolerate camelCase from older templates
-            or ""
+                request.form.get("confirm_password")
+                or request.form.get("confirmPassword")  # tolerate camelCase from older templates
+                or ""
         )
         confirm = confirm.strip()
 
-        # (Optional) debug without leaking secrets
         app.logger.debug("Reset form keys: %s", list(request.form.keys()))
         app.logger.debug("Lengths: pwd=%d confirm=%d", len(pwd), len(confirm))
 
@@ -112,7 +104,6 @@ def reset_password(token):
             flash("Passwords do not match.", "error")
             return redirect(request.url)
 
-        # Store a bcrypt hash (consistent with login)
         hashed = bcrypt.generate_password_hash(pwd).decode("utf-8")
 
         conn = get_db_connection()
@@ -129,7 +120,6 @@ def reset_password(token):
     return render_template("reset_password.html", token=token)
 
 
-# ------------------ Admin: Manage Users ------------------
 @app.route("/admin_users")
 @admin_required
 def admin_users():
