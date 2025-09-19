@@ -54,9 +54,4 @@ python3 insert_data.py
 ```bash
 python3 main.py
 ```
-## 7. Run tests and see coverage
 
-```bash
-coverage run -m pytest                                             
-coverage report -m
-```
